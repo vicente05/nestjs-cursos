@@ -1,7 +1,7 @@
 import { Body, Controller, Delete, Get, Param, Post, Put, Query } from '@nestjs/common';
-import { CreateCategoryDto, UpdateCategoryDto } from 'src/dto/category.dto';
+import { CreateCategoryDto, UpdateCategoryDto } from '../dtos/category.dto';
 import { ParseIntPipe } from 'src/pipes/parse-int.pipe';
-import { CategoriesService } from 'src/services/categories.service';
+import { CategoriesService } from '../services/categories.service';
 
 @Controller('categories')
 export class CategoriesController {
@@ -27,7 +27,7 @@ export class CategoriesController {
         return this._categorieSerivce.update(+Idcategoria, payload);
     }
 
-    @Delete(':id')
+    @Delete(':Idcategoria')
     delete(@Param('Idcategoria') Idcategoria: number) {
         return this._categorieSerivce.remove(+Idcategoria);
     }

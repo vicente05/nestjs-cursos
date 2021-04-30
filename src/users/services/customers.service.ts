@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { GRUDservice } from 'src/common/grud.service';
-import { Customer } from 'src/entities/customer.entity';
+import { Customer } from '../entities/customer.entity';
 
 @Injectable()
 export class CustomersService extends GRUDservice<Customer> {

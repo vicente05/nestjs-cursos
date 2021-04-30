@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { ProductE } from 'src/entities/product.entity';
+import { ProductE } from '../entities/product.entity';
 import { GRUDservice } from 'src/common/grud.service';
 
 @Injectable()
