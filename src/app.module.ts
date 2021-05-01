@@ -1,5 +1,5 @@
-import { Module, HttpModule, HttpService } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
+import { Module, HttpModule, HttpService, Inject } from '@nestjs/common';
+import { ConfigModule, ConfigType } from '@nestjs/config';
 import { object } from 'joi';
 
 import { AppController } from './app.controller';
@@ -36,4 +36,9 @@ import { ApiModule } from './api/api.module';
         },
     ],
 })
-export class AppModule {}
+export class AppModule {
+    static port: number | string;
+    constructor(@Inject(config.KEY) private _configSevice: ConfigType<typeof config>) {
+        AppModule.port = this._configSevice.port || 3000;
+    }
+}
