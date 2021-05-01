@@ -1,2 +1,2 @@
 export { enviroments } from './environments';
-export { config } from './config';
+export { config, schema } from './config';

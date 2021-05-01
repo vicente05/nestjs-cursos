@@ -1,4 +1,5 @@
 import { registerAs } from '@nestjs/config';
+import * as Joi from 'joi';
 
 export const config = registerAs('config', () => {
     return {
@@ -9,3 +10,9 @@ export const config = registerAs('config', () => {
         apiKey: process.env.API_KEY,
     };
 });
+
+export const schema: any = {
+    API_KEY: Joi.number().required(),
+    DATABASE_NAME: Joi.string().required(),
+    DB_PORT: Joi.number().required(),
+};

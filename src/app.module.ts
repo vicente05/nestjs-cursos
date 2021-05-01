@@ -1,10 +1,11 @@
 import { Module, HttpModule, HttpService } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
+import { object } from 'joi';
+
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { DatabaseModule } from './database/database.module';
-import { ConfigModule } from '@nestjs/config';
-
-import { enviroments, config } from './environments';
+import { enviroments, config, schema } from './environments';
 import { ApiModule } from './api/api.module';
 
 @Module({
@@ -16,6 +17,7 @@ import { ApiModule } from './api/api.module';
             envFilePath: enviroments[process.env.NODE_ENV] || '.env',
             isGlobal: true,
             load: [config],
+            validationSchema: object(schema),
         }),
         ApiModule,
     ],
