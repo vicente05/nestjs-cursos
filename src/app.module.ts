@@ -1,29 +1,44 @@
-import { Module } from '@nestjs/common';
+import { Module, HttpModule, HttpService, Inject } from '@nestjs/common';
+import { ConfigModule, ConfigType } from '@nestjs/config';
+import { object } from 'joi';
+
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { ProductsController } from './controllers/products.controller';
-import { CategoriesController } from './controllers/categories.controller';
-import { BrandsController } from './controllers/brands.controller';
-import { UsersController } from './controllers/users.controller';
-import { OrdersController } from './controllers/orders.controller';
-import { CustomersController } from './controllers/customers.controller';
-import { ProductService } from './services/product.service';
-import { BrandService } from './services/brand.service';
-import { CategoriesService } from './services/categories.service';
-import { UsersService } from './services/users.service';
-import { CustomersService } from './services/customers.service';
+import { DatabaseModule } from './database/database.module';
+import { enviroments, config, schema } from './environments';
+import { ApiModule } from './api/api.module';
 
 @Module({
-    imports: [],
-    controllers: [
-        AppController,
-        ProductsController,
-        CategoriesController,
-        BrandsController,
-        UsersController,
-        OrdersController,
-        CustomersController,
+    imports: [
+        ApiModule,
+        HttpModule,
+        DatabaseModule,
+        ConfigModule.forRoot({
+            envFilePath: enviroments[process.env.NODE_ENV] || '.env',
+            isGlobal: true,
+            load: [config],
+            validationSchema: object(schema),
+        }),
+        ApiModule,
     ],
-    providers: [AppService, ProductService, BrandService, CategoriesService, UsersService, CustomersService],
+    controllers: [AppController],
+    providers: [
+        AppService,
+        {
+            provide: 'TASKS',
+            useFactory: async (http: HttpService) => {
+                const tasks = await http
+                    .get('https://jsonplaceholder.typicode.com/todos')
+                    .toPromise();
+                return tasks.data;
+            },
+            inject: [HttpService],
+        },
+    ],
 })
-export class AppModule {}
+export class AppModule {
+    static port: number | string;
+    constructor(@Inject(config.KEY) private _configSevice: ConfigType<typeof config>) {
+        AppModule.port = this._configSevice.port || 3000;
+    }
+}
