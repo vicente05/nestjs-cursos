@@ -1,4 +1,4 @@
-import { Products } from 'src/products/entities/product.entity';
+import { Products } from 'src/api/products/entities/product.entity';
 import { User } from './user.entity';
 
 export class Order {
