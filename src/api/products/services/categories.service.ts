@@ -1,14 +1,17 @@
 import { Injectable } from '@nestjs/common';
-import { GRUDservice } from 'src/common/grud.service';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
+import { GRUDMongoservice } from 'src/common/grudMongo.service';
 import { Category } from '../entities/category.entity';
 
 @Injectable()
-export class CategoriesService extends GRUDservice<Category> {
+export class CategoriesService extends GRUDMongoservice<Category> {
     table = 'Category';
-    items: Category[] = [
-        {
-            id: 1,
-            name: 'Category 1',
-        },
-    ];
+
+    constructor(
+        @InjectModel(Category.name)
+        private _categoriaModel: Model<Category>,
+    ) {
+        super(_categoriaModel);
+    }
 }

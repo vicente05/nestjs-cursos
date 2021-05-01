@@ -9,12 +9,12 @@ import {
     Query,
     HttpStatus,
     HttpCode,
-    //ParseIntPipe,
+    ParseUUIDPipe,
 } from '@nestjs/common';
 import { ProductService } from '../services/product.service';
-import { ParseIntPipe } from 'src/pipes/parse-int.pipe';
 import { CreateProductDto, UpdateProductDto } from '../dtos/products.dto';
 import { ApiTags, ApiOperation } from '@nestjs/swagger';
+import { ResponseBasic } from 'src/common/interface';
 
 @ApiTags('products')
 @Controller('products')
@@ -23,12 +23,13 @@ export class ProductsController {
 
     @Get()
     @ApiOperation({ summary: 'List of products' })
-    findAll(
+    async findAll(
         @Query('limit') limit = 100,
         @Query('offset') offset = 0,
         @Query('brand') brand: string,
-    ) {
-        return this.productService.findAll();
+    ): Promise<ResponseBasic> {
+        const products = await this.productService.findAll();
+        return { ok: true, products };
     }
 
     @Get('filter')
@@ -38,22 +39,29 @@ export class ProductsController {
 
     @Get(':productId')
     @HttpCode(HttpStatus.ACCEPTED)
-    findOne(@Param('productId', ParseIntPipe) productId: number) {
-        return this.productService.findOne(productId);
+    async findOne(@Param('productId') productId: string): Promise<ResponseBasic> {
+        const products = await this.productService.findOne(productId);
+        return { ok: true, products };
     }
 
     @Post()
-    create(@Body() payload: CreateProductDto) {
-        return this.productService.create(payload);
+    async create(@Body() payload: CreateProductDto): Promise<ResponseBasic> {
+        const products = await this.productService.create(payload);
+        return { ok: true, products };
     }
 
-    @Put(':id')
-    update(@Param('id') id: number, @Body() payload: UpdateProductDto) {
-        return this.productService.update(+id, payload);
+    @Put(':productId')
+    async update(
+        @Param('productId') id: string,
+        @Body() payload: UpdateProductDto,
+    ): Promise<ResponseBasic> {
+        const products = await this.productService.update(id, payload);
+        return { ok: true, products };
     }
 
-    @Delete(':id')
-    delete(@Param('id') id: number) {
-        return this.productService.remove(+id);
+    @Delete(':productId')
+    async delete(@Param('productId') id: string): Promise<ResponseBasic> {
+        const products = await this.productService.remove(id);
+        return { ok: true, products };
     }
 }

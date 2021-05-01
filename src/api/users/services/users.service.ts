@@ -1,44 +1,35 @@
-import { Inject, Injectable } from '@nestjs/common';
-import { Db } from 'mongodb';
+import { Injectable } from '@nestjs/common';
 
-import { GRUDservice } from 'src/common/grud.service';
-import { Order } from '../entities/order.entity';
 import { User } from '../entities/user.entity';
 
+import { GRUDMongoservice } from 'src/common/grudMongo.service';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
 import { ProductService } from 'src/api/products/services/product.service';
-import { ConfigService } from '@nestjs/config';
 
 @Injectable()
-export class UsersService extends GRUDservice<User> {
-    items: User[] = [
-        {
-            id: 1,
-            email: 'correo@mail.com',
-            password: '12345',
-            role: 'admin',
-        },
-    ];
-
+export class UsersService extends GRUDMongoservice<User> {
+    table = 'User';
     constructor(
+        @InjectModel(User.name)
+        private _userModel: Model<User>,
         private _productService: ProductService,
-        private _config: ConfigService,
-        @Inject('MONGO') private database: Db,
     ) {
-        super();
+        super(_userModel);
     }
 
-    getOrdersByUser(id: number): Order {
-        const user = super.findOne(id);
+    async getOrdersByUser(id: any): Promise<any> {
+        const user = await super.findOne(id);
         return {
             date: new Date(),
             user,
-            products: this._productService.findAll(),
+            products: await this._productService.findAll(),
         };
     }
 
-    async getTasks(): Promise<any[]> {
-        const tasksCollection = this.database.collection('tasks');
-        const findTasks = await tasksCollection.find().toArray();
-        return findTasks;
-    }
+    //async getTasks(): Promise<any[]> {
+    //    const tasksCollection = this._userModel.modelName
+    //    const findTasks = await tasksCollection.find().toArray();
+    //    return findTasks;
+    //}
 }

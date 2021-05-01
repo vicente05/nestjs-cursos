@@ -1,15 +1,16 @@
 import { Injectable } from '@nestjs/common';
-import { GRUDservice } from 'src/common/grud.service';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
+import { GRUDMongoservice } from 'src/common/grudMongo.service';
 import { Brand } from '../entities/brand.entity';
 
 @Injectable()
-export class BrandService extends GRUDservice<Brand> {
+export class BrandService extends GRUDMongoservice<Brand> {
     table = 'Brands';
-    items: Brand[] = [
-        {
-            id: 1,
-            name: 'Brand 1',
-            image: 'https://i.imgur.com/U4iGx1j.jpeg',
-        },
-    ];
+    constructor(
+        @InjectModel(Brand.name)
+        private _brandModel: Model<Brand>,
+    ) {
+        super(_brandModel);
+    }
 }

@@ -1,5 +1,6 @@
 import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
+import { ResponseBasic } from 'src/common/interface';
 import { CreateCustomerDto, UpdateCustomerDto } from '../dtos/customer.dto';
 import { CustomersService } from '../services/customers.service';
 
@@ -9,27 +10,35 @@ export class CustomersController {
     constructor(private customersService: CustomersService) {}
 
     @Get()
-    findAll() {
-        return this.customersService.findAll();
+    async findAll(): Promise<ResponseBasic> {
+        const customers = await this.customersService.findAll();
+        return { ok: true, customers };
     }
 
     @Get(':id')
-    get(@Param('id', ParseIntPipe) id: number) {
-        return this.customersService.findOne(id);
+    async get(@Param('id', ParseIntPipe) id: number): Promise<ResponseBasic> {
+        const customers = await this.customersService.findOne(id);
+        return { ok: true, customers };
     }
 
     @Post()
-    create(@Body() payload: CreateCustomerDto) {
-        return this.customersService.create(payload);
+    async create(@Body() payload: CreateCustomerDto): Promise<ResponseBasic> {
+        const customers = await this.customersService.create(payload);
+        return { ok: true, customers };
     }
 
     @Put(':id')
-    update(@Param('id', ParseIntPipe) id: number, @Body() payload: UpdateCustomerDto) {
-        return this.customersService.update(id, payload);
+    async update(
+        @Param('id', ParseIntPipe) id: number,
+        @Body() payload: UpdateCustomerDto,
+    ): Promise<ResponseBasic> {
+        const customers = await this.customersService.update(id, payload);
+        return { ok: true, customers };
     }
 
     @Delete(':id')
-    remove(@Param('id', ParseIntPipe) id: number) {
-        return this.customersService.remove(+id);
+    async remove(@Param('id', ParseIntPipe) id: number): Promise<ResponseBasic> {
+        const customers = await this.customersService.remove(+id);
+        return { ok: true, customers };
     }
 }

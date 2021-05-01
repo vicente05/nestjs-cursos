@@ -1,6 +1,7 @@
 import { Body, Delete, Get, Param, ParseIntPipe, Post, Put } from '@nestjs/common';
 import { Controller } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
+import { ResponseBasic } from 'src/common/interface';
 import { CreateBrandDto, UpdateBrandDto } from '../dtos/brand.dto';
 import { BrandService } from '../services/brand.service';
 
@@ -10,27 +11,35 @@ export class BrandsController {
     constructor(private brandsService: BrandService) {}
 
     @Get()
-    findAll() {
-        return this.brandsService.findAll();
+    async findAll(): Promise<ResponseBasic> {
+        const brands = await this.brandsService.findAll();
+        return { ok: true, brands };
     }
 
-    @Get(':id')
-    get(@Param('id', ParseIntPipe) id: number) {
-        return this.brandsService.findOne(id);
+    @Get(':idBrand')
+    async get(@Param('idBrand', ParseIntPipe) idBrand: number): Promise<ResponseBasic> {
+        const brands = await this.brandsService.findOne(idBrand);
+        return { ok: true, brands };
     }
 
     @Post()
-    create(@Body() payload: CreateBrandDto) {
-        return this.brandsService.create(payload);
+    async create(@Body() payload: CreateBrandDto): Promise<ResponseBasic> {
+        const brands = await this.brandsService.create(payload);
+        return { ok: true, brands };
     }
 
-    @Put(':id')
-    update(@Param('id', ParseIntPipe) id: number, @Body() payload: UpdateBrandDto) {
-        return this.brandsService.update(id, payload);
+    @Put(':idBrand')
+    async update(
+        @Param('idBrand', ParseIntPipe) idBrand: number,
+        @Body() payload: UpdateBrandDto,
+    ): Promise<ResponseBasic> {
+        const brands = await this.brandsService.update(idBrand, payload);
+        return { ok: true, brands };
     }
 
-    @Delete(':id')
-    remove(@Param('id', ParseIntPipe) id: number) {
-        return this.brandsService.remove(+id);
+    @Delete(':idBrand')
+    async remove(@Param('idBrand', ParseIntPipe) idBrand: number): Promise<ResponseBasic> {
+        const brands = await this.brandsService.remove(idBrand);
+        return { ok: true, brands };
     }
 }

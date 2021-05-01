@@ -8,7 +8,7 @@ export const config = registerAs('config', () => {
             port: process.env.DB_PORT,
         },
         mongo: {
-            dbname: process.env.MONGO_DB,
+            dbName: process.env.MONGO_DB,
             port: parseInt(process.env.MONGO_PORT, 10),
             username: process.env.MONGO_INITDB_ROOT_USERNAME,
             password: process.env.MONGO_INITDB_ROOT_PASSWORD,

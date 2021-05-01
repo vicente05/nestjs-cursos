@@ -3,6 +3,7 @@ import { CreateCategoryDto, UpdateCategoryDto } from '../dtos/category.dto';
 import { ParseIntPipe } from 'src/pipes/parse-int.pipe';
 import { CategoriesService } from '../services/categories.service';
 import { ApiTags } from '@nestjs/swagger';
+import { ResponseBasic } from 'src/common/interface';
 
 @ApiTags('categories')
 @Controller('categories')
@@ -10,32 +11,46 @@ export class CategoriesController {
     constructor(private _categorieSerivce: CategoriesService) {}
 
     @Get()
-    findAll(@Query('limit') limit = 100, @Query('offset') offset = 0) {
-        return this._categorieSerivce.findAll();
+    async findAll(
+        @Query('limit') limit = 100,
+        @Query('offset') offset = 0,
+    ): Promise<ResponseBasic> {
+        const categoris = await this._categorieSerivce.findAll();
+        return { ok: true, categoris };
     }
 
     @Get(':Idcategoria')
-    findOne(@Param('Idcategoria', ParseIntPipe) Idcategoria: number) {
-        return this._categorieSerivce.findOne(Idcategoria);
+    async findOne(@Param('Idcategoria', ParseIntPipe) Idcategoria: number): Promise<ResponseBasic> {
+        const categoris = await this._categorieSerivce.findOne(Idcategoria);
+        return { ok: true, categoris };
     }
 
     @Post()
-    create(@Body() payload: CreateCategoryDto) {
-        return this._categorieSerivce.create(payload);
+    async create(@Body() payload: CreateCategoryDto) {
+        const categoris = await this._categorieSerivce.create(payload);
+        return { ok: true, categoris };
     }
 
     @Put(':Idcategoria')
-    update(@Param('Idcategoria') Idcategoria: number, @Body() payload: UpdateCategoryDto) {
-        return this._categorieSerivce.update(+Idcategoria, payload);
+    async update(
+        @Param('Idcategoria') Idcategoria: number,
+        @Body() payload: UpdateCategoryDto,
+    ): Promise<ResponseBasic> {
+        const categoris = await this._categorieSerivce.update(+Idcategoria, payload);
+        return { ok: true, categoris };
     }
 
     @Delete(':Idcategoria')
-    delete(@Param('Idcategoria') Idcategoria: number) {
-        return this._categorieSerivce.remove(+Idcategoria);
+    async delete(@Param('Idcategoria') Idcategoria: number): Promise<ResponseBasic> {
+        const categoris = await this._categorieSerivce.remove(+Idcategoria);
+        return { ok: true, categoris };
     }
 
-    @Get(':id/products/:productId')
-    getCategorias(@Param('productId') productId: string, @Param('id') id: string) {
-        return { msg: `product ${productId} and ${id}` };
+    @Get(':Idcategoria/products/:productId')
+    async getCategorias(
+        @Param('productId') productId: string,
+        @Param('Idcategoria') Idcategoria: string,
+    ): Promise<ResponseBasic> {
+        return { ok: true, msg: `product ${productId} and ${Idcategoria}` };
     }
 }
