@@ -1,6 +1,5 @@
 import { Body, Controller, Delete, Get, Param, Post, Put, Query } from '@nestjs/common';
 import { CreateCategoryDto, UpdateCategoryDto } from '../dtos/category.dto';
-import { ParseIntPipe } from 'src/pipes/parse-int.pipe';
 import { CategoriesService } from '../services/categories.service';
 import { ApiTags } from '@nestjs/swagger';
 import { ResponseBasic } from 'src/common/interface';
@@ -20,7 +19,7 @@ export class CategoriesController {
     }
 
     @Get(':Idcategoria')
-    async findOne(@Param('Idcategoria', ParseIntPipe) Idcategoria: number): Promise<ResponseBasic> {
+    async findOne(@Param('Idcategoria') Idcategoria: string): Promise<ResponseBasic> {
         const categoris = await this._categorieSerivce.findOne(Idcategoria);
         return { ok: true, categoris };
     }
@@ -33,16 +32,16 @@ export class CategoriesController {
 
     @Put(':Idcategoria')
     async update(
-        @Param('Idcategoria') Idcategoria: number,
+        @Param('Idcategoria') Idcategoria: string,
         @Body() payload: UpdateCategoryDto,
     ): Promise<ResponseBasic> {
-        const categoris = await this._categorieSerivce.update(+Idcategoria, payload);
+        const categoris = await this._categorieSerivce.update(Idcategoria, payload);
         return { ok: true, categoris };
     }
 
     @Delete(':Idcategoria')
-    async delete(@Param('Idcategoria') Idcategoria: number): Promise<ResponseBasic> {
-        const categoris = await this._categorieSerivce.remove(+Idcategoria);
+    async delete(@Param('Idcategoria') Idcategoria: string): Promise<ResponseBasic> {
+        const categoris = await this._categorieSerivce.remove(Idcategoria);
         return { ok: true, categoris };
     }
 

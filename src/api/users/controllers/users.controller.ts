@@ -21,14 +21,14 @@ export class UsersController {
     //}
 
     @Get(':id')
-    async get(@Param('id', ParseIntPipe) id: number): Promise<ResponseBasic> {
-        const users = await this.usersService.findOne(id);
+    async get(@Param('idUser') idUser: string): Promise<ResponseBasic> {
+        const users = await this.usersService.findOne(idUser);
         return { ok: true, users };
     }
 
-    @Get(':id/orders')
-    getOrders(@Param('id') id: string) {
-        return this.usersService.getOrdersByUser(id);
+    @Get(':idUser/orders')
+    getOrders(@Param('idUser') idUser: string) {
+        return this.usersService.getOrdersByUser(idUser);
     }
 
     @Post()
@@ -39,16 +39,16 @@ export class UsersController {
 
     @Put(':id')
     async update(
-        @Param('id', ParseIntPipe) id: number,
+        @Param('idUser') idUser: string,
         @Body() payload: UpdateUserDto,
     ): Promise<ResponseBasic> {
-        const users = await this.usersService.update(id, payload);
+        const users = await this.usersService.update(idUser, payload);
         return { ok: true, users };
     }
 
     @Delete(':id')
-    async remove(@Param('id', ParseIntPipe) id: number): Promise<ResponseBasic> {
-        const users = await this.usersService.remove(+id);
+    async remove(@Param('idUser') idUser: string): Promise<ResponseBasic> {
+        const users = await this.usersService.remove(idUser);
         return { ok: true, users };
     }
 }

@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { ResponseBasic } from 'src/common/interface';
 import { CreateCustomerDto, UpdateCustomerDto } from '../dtos/customer.dto';
@@ -16,8 +16,8 @@ export class CustomersController {
     }
 
     @Get(':id')
-    async get(@Param('id', ParseIntPipe) id: number): Promise<ResponseBasic> {
-        const customers = await this.customersService.findOne(id);
+    async get(@Param('idCustomer') idCustomer: string): Promise<ResponseBasic> {
+        const customers = await this.customersService.findOne(idCustomer);
         return { ok: true, customers };
     }
 
@@ -27,18 +27,18 @@ export class CustomersController {
         return { ok: true, customers };
     }
 
-    @Put(':id')
+    @Put(':idCustomer')
     async update(
-        @Param('id', ParseIntPipe) id: number,
+        @Param('idCustomer') idCustomer: string,
         @Body() payload: UpdateCustomerDto,
     ): Promise<ResponseBasic> {
-        const customers = await this.customersService.update(id, payload);
+        const customers = await this.customersService.update(idCustomer, payload);
         return { ok: true, customers };
     }
 
-    @Delete(':id')
-    async remove(@Param('id', ParseIntPipe) id: number): Promise<ResponseBasic> {
-        const customers = await this.customersService.remove(+id);
+    @Delete(':idCustomer')
+    async remove(@Param('idCustomer') idCustomer: string): Promise<ResponseBasic> {
+        const customers = await this.customersService.remove(idCustomer);
         return { ok: true, customers };
     }
 }

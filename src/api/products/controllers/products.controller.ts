@@ -9,7 +9,6 @@ import {
     Query,
     HttpStatus,
     HttpCode,
-    ParseUUIDPipe,
 } from '@nestjs/common';
 import { ProductService } from '../services/product.service';
 import { CreateProductDto, UpdateProductDto } from '../dtos/products.dto';

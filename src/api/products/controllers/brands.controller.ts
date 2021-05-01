@@ -17,7 +17,7 @@ export class BrandsController {
     }
 
     @Get(':idBrand')
-    async get(@Param('idBrand', ParseIntPipe) idBrand: number): Promise<ResponseBasic> {
+    async get(@Param('idBrand') idBrand: string): Promise<ResponseBasic> {
         const brands = await this.brandsService.findOne(idBrand);
         return { ok: true, brands };
     }
@@ -30,7 +30,7 @@ export class BrandsController {
 
     @Put(':idBrand')
     async update(
-        @Param('idBrand', ParseIntPipe) idBrand: number,
+        @Param('idBrand') idBrand: string,
         @Body() payload: UpdateBrandDto,
     ): Promise<ResponseBasic> {
         const brands = await this.brandsService.update(idBrand, payload);
@@ -38,7 +38,7 @@ export class BrandsController {
     }
 
     @Delete(':idBrand')
-    async remove(@Param('idBrand', ParseIntPipe) idBrand: number): Promise<ResponseBasic> {
+    async remove(@Param('idBrand') idBrand: string): Promise<ResponseBasic> {
         const brands = await this.brandsService.remove(idBrand);
         return { ok: true, brands };
     }
