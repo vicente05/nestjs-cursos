@@ -1,4 +1,6 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
+import { Db } from 'mongodb';
+
 import { GRUDservice } from 'src/common/grud.service';
 import { Order } from '../entities/order.entity';
 import { User } from '../entities/user.entity';
@@ -17,7 +19,11 @@ export class UsersService extends GRUDservice<User> {
         },
     ];
 
-    constructor(private _productService: ProductService, private _config: ConfigService) {
+    constructor(
+        private _productService: ProductService,
+        private _config: ConfigService,
+        @Inject('MONGO') private database: Db,
+    ) {
         super();
     }
 
@@ -28,5 +34,11 @@ export class UsersService extends GRUDservice<User> {
             user,
             products: this._productService.findAll(),
         };
+    }
+
+    async getTasks(): Promise<any[]> {
+        const tasksCollection = this.database.collection('tasks');
+        const findTasks = await tasksCollection.find().toArray();
+        return findTasks;
     }
 }
