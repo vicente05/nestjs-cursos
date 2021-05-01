@@ -1,6 +1,9 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { GRUDservice } from 'src/common/grud.service';
+import { Order } from '../entities/order.entity';
 import { User } from '../entities/user.entity';
+
+import { ProductService } from 'src/products/services/product.service';
 
 @Injectable()
 export class UsersService extends GRUDservice<User> {
@@ -12,4 +15,21 @@ export class UsersService extends GRUDservice<User> {
             role: 'admin',
         },
     ];
+
+    constructor(
+        private _productService: ProductService,
+        @Inject('API_KEY') private apiKey: string,
+    ) {
+        super();
+        console.log(`Hello World! ${this.apiKey}`);
+    }
+
+    getOrdersByUser(id: number): Order {
+        const user = super.findOne(id);
+        return {
+            date: new Date(),
+            user,
+            products: this._productService.findAll(),
+        };
+    }
 }

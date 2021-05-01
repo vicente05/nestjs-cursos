@@ -1,11 +1,11 @@
 import { Injectable } from '@nestjs/common';
-import { ProductE } from '../entities/product.entity';
+import { Products } from '../entities/product.entity';
 import { GRUDservice } from 'src/common/grud.service';
 
 @Injectable()
-export class ProductService extends GRUDservice<ProductE> {
+export class ProductService extends GRUDservice<Products> {
     table = 'Product';
-    items: ProductE[] = [
+    items: Products[] = [
         {
             id: 1,
             name: 'prueba1',
