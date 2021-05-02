@@ -18,6 +18,8 @@ const API_KEY_PROD = '213123456789';
                     uri: `${connection}://${username}:${password}@${host}:${port}/?authSource=admin&readPreference=primary`,
                     dbName,
                     useUnifiedTopology: true,
+                    useFindAndModify: false,
+                    useCreateIndex: true,
                 } as MongooseModuleOptions;
             },
             inject: [config.KEY],

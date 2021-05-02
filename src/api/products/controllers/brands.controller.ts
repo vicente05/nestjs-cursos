@@ -1,8 +1,9 @@
-import { Body, Delete, Get, Param, ParseIntPipe, Post, Put } from '@nestjs/common';
+import { Body, Delete, Get, Param, Query, Post, Put } from '@nestjs/common';
 import { Controller } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { ResponseBasic } from 'src/common/interface';
-import { CreateBrandDto, UpdateBrandDto } from '../dtos/brand.dto';
+import { MongoIdPipe } from 'src/pipes/mongo-id.pipe';
+import { CreateBrandDto, FilterBrandsDto, UpdateBrandDto } from '../dtos/brand.dto';
 import { BrandService } from '../services/brand.service';
 
 @ApiTags('brands')
@@ -11,13 +12,13 @@ export class BrandsController {
     constructor(private brandsService: BrandService) {}
 
     @Get()
-    async findAll(): Promise<ResponseBasic> {
-        const brands = await this.brandsService.findAll();
+    async findAll(@Query() params: FilterBrandsDto): Promise<ResponseBasic> {
+        const brands = await this.brandsService.findAll(params);
         return { ok: true, brands };
     }
 
     @Get(':idBrand')
-    async get(@Param('idBrand') idBrand: string): Promise<ResponseBasic> {
+    async get(@Param('idBrand', MongoIdPipe) idBrand: string): Promise<ResponseBasic> {
         const brands = await this.brandsService.findOne(idBrand);
         return { ok: true, brands };
     }
@@ -30,7 +31,7 @@ export class BrandsController {
 
     @Put(':idBrand')
     async update(
-        @Param('idBrand') idBrand: string,
+        @Param('idBrand', MongoIdPipe) idBrand: string,
         @Body() payload: UpdateBrandDto,
     ): Promise<ResponseBasic> {
         const brands = await this.brandsService.update(idBrand, payload);
@@ -38,7 +39,7 @@ export class BrandsController {
     }
 
     @Delete(':idBrand')
-    async remove(@Param('idBrand') idBrand: string): Promise<ResponseBasic> {
+    async remove(@Param('idBrand', MongoIdPipe) idBrand: string): Promise<ResponseBasic> {
         const brands = await this.brandsService.remove(idBrand);
         return { ok: true, brands };
     }

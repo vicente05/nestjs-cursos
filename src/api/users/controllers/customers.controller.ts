@@ -1,6 +1,7 @@
 import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { ResponseBasic } from 'src/common/interface';
+import { MongoIdPipe } from 'src/pipes/mongo-id.pipe';
 import { CreateCustomerDto, UpdateCustomerDto } from '../dtos/customer.dto';
 import { CustomersService } from '../services/customers.service';
 
@@ -16,7 +17,7 @@ export class CustomersController {
     }
 
     @Get(':id')
-    async get(@Param('idCustomer') idCustomer: string): Promise<ResponseBasic> {
+    async get(@Param('idCustomer', MongoIdPipe) idCustomer: string): Promise<ResponseBasic> {
         const customers = await this.customersService.findOne(idCustomer);
         return { ok: true, customers };
     }
@@ -29,7 +30,7 @@ export class CustomersController {
 
     @Put(':idCustomer')
     async update(
-        @Param('idCustomer') idCustomer: string,
+        @Param('idCustomer', MongoIdPipe) idCustomer: string,
         @Body() payload: UpdateCustomerDto,
     ): Promise<ResponseBasic> {
         const customers = await this.customersService.update(idCustomer, payload);
@@ -37,7 +38,7 @@ export class CustomersController {
     }
 
     @Delete(':idCustomer')
-    async remove(@Param('idCustomer') idCustomer: string): Promise<ResponseBasic> {
+    async remove(@Param('idCustomer', MongoIdPipe) idCustomer: string): Promise<ResponseBasic> {
         const customers = await this.customersService.remove(idCustomer);
         return { ok: true, customers };
     }

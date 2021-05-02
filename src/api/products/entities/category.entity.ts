@@ -5,6 +5,9 @@ import { Document } from 'mongoose';
 export class Category extends Document {
     @Prop({ type: String, required: true })
     name: string;
+
+    @Prop({ type: String, required: true })
+    image: string;
 }
 
 export const CategorySchema = SchemaFactory.createForClass(Category);
